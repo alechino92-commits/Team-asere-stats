@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TEAM ASERE STATS</title>
+<style>
+body{background:#071a35;color:white;font-family:Arial;margin:0;padding:18px}
+header{text-align:center;border-bottom:3px solid #d62828;padding:15px}
+h1{color:white}
+.panel{background:#10294b;padding:16px;margin-top:18px;border-radius:12px}
+input,button{padding:12px;margin:5px 0;width:100%;box-sizing:border-box;border-radius:7px;border:0;font-size:16px}
+button{background:#d62828;color:white;font-weight:bold}
+.jugador{padding:10px;border-bottom:1px solid #456}
+</style>
+</head>
+<body>
+<header>
+<h1>TEAM ASERE STATS</h1>
+<p>Estadísticas oficiales del equipo</p>
+</header>
+
+<div class="panel">
+<h2>Agregar jugador</h2>
+<input id="nombre" placeholder="Nombre del jugador">
+<input id="numero" type="number" placeholder="Número">
+<button onclick="agregar()">AGREGAR JUGADOR</button>
+</div>
+
+<div class="panel">
+<h2>Plantilla del equipo</h2>
+<div id="plantilla"></div>
+</div>
+
+<div class="panel">
+<h2>Registrar resultado</h2>
+<input id="partido" placeholder="Ejemplo: Team Asere 8 - 4 Rival">
+<button onclick="guardar()">GUARDAR PARTIDO</button>
+<div id="resultados"></div>
+</div>
+
+<script>
+const inicial=[
+"Alejandro Paez","Alejandro","Alain","Juan Carlos",
+"Armando","Hector Cristian","Cristian","Cristian Forbes",
+"Reinier","Llerandri","Hansel","Jorge",
+"Eddy Abel García","Rafael","Modesto","Albert","Raikon"
+];
+
+let jugadores=JSON.parse(localStorage.getItem("jugadores")||"null")
+||inicial.map((nombre,i)=>({nombre,numero:i===0?92:i===3?10:""}));
+
+let partidos=JSON.parse(localStorage.getItem("partidos")||"[]");
+
+function mostrar(){
+document.getElementById("plantilla").innerHTML=
+jugadores.map(j=>`<div class="jugador">${j.nombre} ${j.numero?"#"+j.numero:""}</div>`).join("");
+
+document.getElementById("resultados").innerHTML=
+partidos.map(p=>`<div class="jugador">${p}</div>`).join("");
+}
+
+function agregar(){
+let nombre=document.getElementById("nombre").value.trim();
+let numero=document.getElementById("numero").value;
+if(!nombre)return;
+jugadores.push({nombre,numero});
+localStorage.setItem("jugadores",JSON.stringify(jugadores));
+document.getElementById("nombre").value="";
+document.getElementById("numero").value="";
+mostrar();
+}
+
+function guardar(){
+let p=document.getElementById("partido").value.trim();
+if(!p)return;
+partidos.unshift(p);
+localStorage.setItem("partidos",JSON.stringify(partidos));
+document.getElementById("partido").value="";
+mostrar();
+}
+mostrar();
+</script>
+</body>
+</html>
